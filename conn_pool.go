@@ -30,7 +30,7 @@ func init() {
 	go closeStaleServerConn(connPool.muxConn, muxConnHostPort)
 }
 
-func getConnFromChan(ch chan *serverConn) (sv *serverConn) {
+func getConnFromChan(ch <-chan *serverConn) (sv *serverConn) {
 	for {
 		select {
 		case sv = <-ch:
@@ -45,7 +45,7 @@ func getConnFromChan(ch chan *serverConn) (sv *serverConn) {
 	}
 }
 
-func putConnToChan(sv *serverConn, ch chan *serverConn, chname string) {
+func putConnToChan(sv *serverConn, ch chan<- *serverConn, chname string) {
 	select {
 	case ch <- sv:
 		debug.Printf("connPool channel %s: put conn\n", chname)
